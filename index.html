@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCRE 二级 Web程序设计 · 备考指南</title>
+<style>
+  :root {
+    --primary: #1565c0;
+    --primary-light: #e3f2fd;
+    --accent: #f57c00;
+    --accent-light: #fff3e0;
+    --success: #2e7d32;
+    --success-light: #e8f5e9;
+    --danger: #c62828;
+    --danger-light: #ffebee;
+    --warning: #f9a825;
+    --warning-light: #fffde7;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-muted: #616161;
+    --border: #e0e0e0;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 60%, #1976d2 100%);
+    color: #fff;
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+  header p { font-size: 1rem; opacity: 0.88; }
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-item .num { font-size: 1.8rem; font-weight: 700; color: #fff; }
+  .stat-item .label { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    flex: 1 1 auto;
+    min-width: 80px;
+    max-width: 160px;
+    padding: 14px 16px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-align: center;
+  }
+  nav button:hover { color: var(--primary); background: var(--primary-light); }
+  nav button.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+
+  /* ===== MAIN ===== */
+  main { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ===== SECTION ===== */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 1.2rem; }
+
+  /* ===== OVERVIEW GRID ===== */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .overview-item {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .overview-item:hover { transform: translateY(-2px); box-shadow: 0 4px 18px rgba(0,0,0,0.12); }
+  .overview-item h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .overview-item p { font-size: 0.82rem; color: var(--text-muted); }
+  .overview-item .tag {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  /* ===== EXAM INFO ===== */
+  .exam-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .exam-row:last-child { border-bottom: none; }
+  .exam-row .key { width: 110px; color: var(--text-muted); font-size: 14px; flex-shrink: 0; }
+  .exam-row .val { font-weight: 600; color: var(--text); }
+  .pill {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .pill-blue { background: var(--primary-light); color: var(--primary); }
+  .pill-orange { background: var(--accent-light); color: var(--accent); }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-wrap { margin: 6px 0 2px; }
+  .progress-bar {
+    height: 7px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--primary), #42a5f5);
+    transition: width 1s ease;
+  }
+  .progress-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: flex; justify-content: space-between; }
+
+  /* ===== KNOWLEDGE TABS ===== */
+  .ktab-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .ktab-btn {
+    padding: 6px 16px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    background: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .ktab-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .ktab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .ktab-content { display: none; }
+  .ktab-content.active { display: block; }
+
+  /* ===== KNOWLEDGE POINTS ===== */
+  .kp-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .kp-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #fafafa;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .kp-header:hover { background: var(--primary-light); }
+  .kp-header .kp-num {
+    width: 26px;
+    height: 26px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .kp-header .kp-title { font-weight: 600; flex: 1; font-size: 14px; }
+  .kp-header .kp-arrow { color: var(--text-muted); transition: transform 0.2s; }
+  .kp-header.open .kp-arrow { transform: rotate(90deg); }
+  .kp-body {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .kp-body.open { max-height: 1000px; padding: 16px; }
+  .kp-body code {
+    display: block;
+    background: #1e2a3a;
+    color: #a8d8ff;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-family: "Consolas", "Monaco", monospace;
+    margin: 8px 0;
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.5;
+  }
+  .kp-body .note {
+    background: var(--warning-light);
+    border-left: 3px solid var(--warning);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin: 8px 0;
+    color: #5d4037;
+  }
+  .kp-body .tip {
+    background: var(--success-light);
+    border-left: 3px solid #4caf50;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin: 8px 0;
+    color: #1b5e20;
+  }
+  .kp-body ul { padding-left: 20px; }
+  .kp-body li { font-size: 14px; margin-bottom: 4px; }
+  .kp-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .kp-body th {
+    background: var(--primary);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .kp-body td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .kp-body tr:nth-child(even) td { background: #f9f9f9; }
+
+  /* ===== QUIZ ===== */
+  .quiz-question {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid #e0e0e0;
+    transition: border-color 0.2s;
+  }
+  .quiz-question:has(.correct) { border-left-color: var(--success); }
+  .quiz-question:has(.wrong) { border-left-color: var(--danger); }
+  .quiz-options { list-style: none; }
+  .quiz-options li {
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 7px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+    line-height: 1.5;
+    user-select: none;
+  }
+  .quiz-options li:hover { border-color: var(--primary); background: var(--primary-light); }
+  .quiz-options li.correct { background: var(--success-light); border-color: var(--success); color: var(--success); font-weight: 600; }
+  .quiz-options li.wrong { background: var(--danger-light); border-color: var(--danger); color: var(--danger); font-weight: 600; }
+  .quiz-q-text { font-size: 15px; font-weight: 600; margin-bottom: 14px; color: var(--text); line-height: 1.6; }
+  .quiz-explain {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--primary-light);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--primary);
+    display: none;
+  }
+  .quiz-explain.show { display: block; }
+
+  .quiz-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .btn {
+    padding: 9px 20px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: #0d47a1; }
+  .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary-light); }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: #e65100; }
+
+  .quiz-score-box {
+    background: linear-gradient(135deg, var(--primary), #1976d2);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .quiz-score-box.show { display: block; }
+  .quiz-score-box .score-num { font-size: 3rem; font-weight: 700; }
+  .quiz-score-box .score-label { opacity: 0.85; margin-top: 4px; }
+
+  /* ===== CHECKLIST ===== */
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .check-item:hover { background: var(--primary-light); }
+  .check-item.checked { background: var(--success-light); border-color: #a5d6a7; }
+  .check-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); flex-shrink: 0; }
+  .check-item .check-text { font-size: 14px; flex: 1; }
+  .check-item.checked .check-text { text-decoration: line-through; color: var(--text-muted); }
+  .check-progress { margin-bottom: 16px; }
+  .check-progress-label { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+
+  /* ===== TIPS ===== */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .tip-card {
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .tip-card h4 { font-size: 15px; margin-bottom: 8px; }
+  .tip-card ul { padding-left: 18px; }
+  .tip-card li { font-size: 13px; margin-bottom: 5px; color: #444; }
+
+  /* ===== CODE PRACTICE ===== */
+  .practice-case {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .practice-header {
+    background: #1e2a3a;
+    color: #a8d8ff;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .practice-header .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    display: inline-block;
+  }
+  .practice-body {
+    padding: 18px;
+  }
+  .practice-body p { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+  pre {
+    background: #1e2a3a;
+    color: #e8eaf0;
+    border-radius: 7px;
+    padding: 16px;
+    font-size: 13px;
+    font-family: "Consolas", "Monaco", monospace;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+  pre .kw { color: #c792ea; }
+  pre .str { color: #c3e88d; }
+  pre .cm { color: #546e7a; }
+  pre .tag { color: #f07178; }
+  pre .attr { color: #ffcb6b; }
+  pre .val { color: #c3e88d; }
+  pre .num { color: #f78c6c; }
+  pre .fn { color: #82aaff; }
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width: 600px) {
+    header h1 { font-size: 1.6rem; }
+    .header-stats { gap: 20px; }
+    main { padding: 16px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">📚 NCRE 全国计算机等级考试</div>
+  <h1>二级 Web程序设计 · 备考指南</h1>
+  <p>考试大纲 2025年版 · 上机考试 120分钟 · 满分100分</p>
+  <div class="header-stats">
+    <div class="stat-item">
+      <div class="num">6</div>
+      <div class="label">考试章节</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">40</div>
+      <div class="label">选择题分值</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">60</div>
+      <div class="label">操作题分值</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">30</div>
+      <div class="label">样题真题</div>
+    </div>
+  </div>
+</header>
+
+<nav id="mainNav">
+  <button class="active" onclick="switchSection('overview')">📋 考试概览</button>
+  <button onclick="switchSection('knowledge')">📖 知识要点</button>
+  <button onclick="switchSection('quiz')">🎯 样题练习</button>
+  <button onclick="switchSection('practice')">💻 代码实战</button>
+  <button onclick="switchSection('checklist')">✅ 备考清单</button>
+  <button onclick="switchSection('tips')">💡 考试技巧</button>
+</nav>
+
+<main>
+
+<!-- ===== 考试概览 ===== -->
+<div class="section active" id="section-overview">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> 考试基本信息</div>
+    <div class="exam-row"><span class="key">考试形式</span><span class="val">上机考试</span></div>
+    <div class="exam-row"><span class="key">考试时长</span><span class="val">120 分钟</span></div>
+    <div class="exam-row"><span class="key">满分</span><span class="val">100 分</span></div>
+    <div class="exam-row"><span class="key">题型</span><span class="val"><span class="pill pill-blue">单项选择题 40分</span><span class="pill pill-orange">操作题 60分</span></span></div>
+    <div class="exam-row"><span class="key">操作题分类</span><span class="val">基本操作题 + 简单应用题 + 综合应用题</span></div>
+    <div class="exam-row"><span class="key">考试环境</span><span class="val">NetBeans 中国教育考试版 · Chrome 72+</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> 六大考试章节 · 知识分布</div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">一、Web技术基础</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+        <div class="progress-label"><span>Internet、浏览器、服务器、架构</span><span>约5分</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">二、HTTP协议基础</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+        <div class="progress-label"><span>消息格式、请求方法、响应状态、消息头</span><span>约8分</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">三、HTML</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+        <div class="progress-label"><span>文档结构、常用元素、表单与控件</span><span>约12分</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">四、CSS</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+        <div class="progress-label"><span>语法、选择器、布局</span><span>约10分</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">五、JavaScript</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+        <div class="progress-label"><span>语法、内置对象、事件、BOM、DOM</span><span>约15分</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <strong style="font-size:14px">六、动态网页技术</strong>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+        <div class="progress-label"><span>JSP、ASP.NET、PHP、AJAX概念</span><span>约5分</span></div>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:10px 14px; background:var(--accent-light); border-radius:7px; font-size:13px; color:#7b3f00">
+      ⭐ <strong>操作题（60分）</strong>重点考察 HTML + CSS + JavaScript 的综合应用，是拿分关键！
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-item" onclick="switchSection('knowledge')">
+      <h3>🌐 Web基础 & HTTP</h3>
+      <p>DNS、URL解析、HTTP报文格式、GET/POST、状态码</p>
+      <span class="tag">理解为主</span>
+    </div>
+    <div class="overview-item" onclick="switchSection('knowledge')">
+      <h3>📄 HTML</h3>
+      <p>文档结构、语义标签、超链接、表单、多媒体</p>
+      <span class="tag">熟练掌握</span>
+    </div>
+    <div class="overview-item" onclick="switchSection('knowledge')">
+      <h3>🎨 CSS</h3>
+      <p>选择器、盒模型、布局、优先级</p>
+      <span class="tag">熟练掌握</span>
+    </div>
+    <div class="overview-item" onclick="switchSection('knowledge')">
+      <h3>⚡ JavaScript</h3>
+      <p>语法、数组/字符串/数学对象、事件、BOM、DOM操作</p>
+      <span class="tag">重点难点</span>
+    </div>
+    <div class="overview-item" onclick="switchSection('knowledge')">
+      <h3>🔧 动态网页</h3>
+      <p>JSP、ASP.NET、PHP、AJAX基本概念</p>
+      <span class="tag">了解即可</span>
+    </div>
+    <div class="overview-item" onclick="switchSection('quiz')">
+      <h3>📝 样题练习</h3>
+      <p>30道真实样题，即时判分，附解析</p>
+      <span class="tag">点此开始</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 知识要点 ===== -->
+<div class="section" id="section-knowledge">
+  <div class="card">
+    <div class="card-title"><span class="icon">📖</span> 核心知识要点</div>
+    <div class="ktab-nav">
+      <button class="ktab-btn active" onclick="switchKtab('k1')">🌐 Web & HTTP</button>
+      <button class="ktab-btn" onclick="switchKtab('k2')">📄 HTML</button>
+      <button class="ktab-btn" onclick="switchKtab('k3')">🎨 CSS</button>
+      <button class="ktab-btn" onclick="switchKtab('k4')">⚡ JavaScript</button>
+      <button class="ktab-btn" onclick="switchKtab('k5')">🔧 动态网页</button>
+    </div>
+
+    <!-- WEB & HTTP -->
+    <div class="ktab-content active" id="ktab-k1">
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">1</div>
+          <div class="kp-title">DNS与URL解析</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <ul>
+            <li><strong>DNS</strong>（域名系统）：完成<strong>域名与IP地址之间</strong>的映射（注意：不是主机名和域名，也不是域名和HTTP）</li>
+            <li>URL格式：<code style="display:inline;background:#eef;padding:2px 6px;border-radius:3px;font-size:12px">协议://主机名[:端口]/路径[?查询字符串]</code></li>
+            <li>示例：<code style="display:inline;background:#eef;padding:2px 6px;border-radius:3px;font-size:12px">http://www.sample.com:8080/login.htm</code> → 协议为 <strong>http</strong></li>
+          </ul>
+          <div class="note">⚠️ 样题高频：DNS完成的是域名↔IP映射，答案选C</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">2</div>
+          <div class="kp-title">HTTP协议基础</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <ul>
+            <li>HTTP 通常监听 <strong>TCP/80端口</strong>（HTTPS为443）</li>
+            <li>HTTP是<strong>应用层</strong>协议，基于TCP/IP</li>
+          </ul>
+          <table>
+            <tr><th>消息类型</th><th>组成</th></tr>
+            <tr><td>请求消息</td><td>开始行（请求行）+ 消息头 + 消息体</td></tr>
+            <tr><td>响应消息</td><td>开始行（状态行）+ 消息头 + 消息体</td></tr>
+          </table>
+          <div class="note">⚠️ 易错点：请求消息的第一行叫"开始行/请求行"，响应消息的第一行叫"开始行/状态行"。两者都叫"开始行"</div>
+          <table>
+            <tr><th>常用请求方法</th><th>说明</th></tr>
+            <tr><td>GET</td><td>获取资源，参数在URL中</td></tr>
+            <tr><td>POST</td><td>提交数据，参数在消息体中</td></tr>
+            <tr><td>PUT</td><td>更新资源</td></tr>
+            <tr><td>DELETE</td><td>删除资源</td></tr>
+          </table>
+          <table>
+            <tr><th>状态码</th><th>含义</th></tr>
+            <tr><td>200</td><td>OK，请求成功</td></tr>
+            <tr><td>301/302</td><td>重定向</td></tr>
+            <tr><td>404</td><td>Not Found，资源未找到</td></tr>
+            <tr><td>500</td><td>服务器内部错误</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTML -->
+    <div class="ktab-content" id="ktab-k2">
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">1</div>
+          <div class="kp-title">HTML文档结构</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;页面标题&lt;/title&gt;     &lt;!-- title 显示在浏览器标签栏 --&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;  &lt;!-- 外部CSS放在head --&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- 页面内容 --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code>
+          <div class="note">⚠️ 外部样式表的引用语句应放在 &lt;head&gt; 标签内，不是 &lt;body&gt;！</div>
+          <ul>
+            <li><code style="display:inline;background:#eef;padding:1px 5px;border-radius:3px">&lt;title&gt;</code> → 页面标题（不是 &lt;header&gt; 也不是 &lt;caption&gt;）</li>
+            <li><code style="display:inline;background:#eef;padding:1px 5px;border-radius:3px">&lt;header&gt;</code> → 页面/区块的页眉，是语义标签</li>
+          </ul>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">2</div>
+          <div class="kp-title">超链接与多媒体</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>&lt;!-- 普通链接 --&gt;
+&lt;a href="http://example.com"&gt;访问&lt;/a&gt;
+
+&lt;!-- 在新窗口打开 --&gt;
+&lt;a href="url" target="_blank"&gt;新窗口&lt;/a&gt;
+
+&lt;!-- 电子邮件链接（必须用 mailto:） --&gt;
+&lt;a href="mailto:abc@example.com"&gt;发邮件&lt;/a&gt;
+
+&lt;!-- 图片 --&gt;
+&lt;img src="img.jpg" alt="描述" width="100"&gt;</code>
+          <table>
+            <tr><th>target属性值</th><th>效果</th></tr>
+            <tr><td>_blank</td><td>新窗口打开（✅常考）</td></tr>
+            <tr><td>_self</td><td>当前窗口（默认）</td></tr>
+            <tr><td>_top</td><td>顶层窗口</td></tr>
+            <tr><td>_parent</td><td>父框架</td></tr>
+          </table>
+          <div class="tip">✅ 超链接不只有文本，图片、按钮等都可以设为超级链接</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">3</div>
+          <div class="kp-title">表单与控件</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>&lt;form action="login.php" method="POST"&gt;
+  &lt;!-- 文本框 --&gt;
+  &lt;input type="text" name="user"&gt;
+
+  &lt;!-- 密码框 --&gt;
+  &lt;input type="password" name="pwd"&gt;
+
+  &lt;!-- 单选框 --&gt;
+  &lt;input type="radio" name="sex" value="m"&gt;男
+
+  &lt;!-- 复选框 --&gt;
+  &lt;input type="checkbox" name="hobby" value="reading"&gt;
+
+  &lt;!-- 下拉列表 --&gt;
+  &lt;select name="city"&gt;
+    &lt;option value="bj"&gt;北京&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;!-- 文件上传（限制类型） --&gt;
+  &lt;input type="file" accept=".jpg,.png"&gt;
+
+  &lt;!-- 提交按钮 --&gt;
+  &lt;input type="submit" value="提交"&gt;
+&lt;/form&gt;</code>
+          <div class="note">⚠️ 复选框用 type="checkbox"，不是 check；单选框用 type="radio"</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">4</div>
+          <div class="kp-title">列表标签</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>标签</th><th>说明</th></tr>
+            <tr><td>&lt;ul&gt;</td><td>无序列表（Unordered List）</td></tr>
+            <tr><td>&lt;ol&gt;</td><td>有序列表（Ordered List）✅建立有序列表选ol</td></tr>
+            <tr><td>&lt;li&gt;</td><td>列表项（配合ul/ol使用）</td></tr>
+            <tr><td>&lt;dl&gt;</td><td>定义列表</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">5</div>
+          <div class="kp-title">块级元素 vs 行内元素</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>块级元素（占满一行）</th><th>行内元素（不独占一行）</th></tr>
+            <tr><td>&lt;div&gt;、&lt;p&gt;、&lt;table&gt;、&lt;h1&gt;~&lt;h6&gt;、&lt;ul&gt;、&lt;ol&gt;</td><td>&lt;a&gt;、&lt;span&gt;、&lt;img&gt;、&lt;input&gt;、&lt;strong&gt;</td></tr>
+          </table>
+          <div class="note">⚠️ 样题高频：&lt;a&gt; 是行内元素（不属于块元素）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS -->
+    <div class="ktab-content" id="ktab-k3">
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">1</div>
+          <div class="kp-title">CSS基本语法</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>/* 正确语法：选择器{属性:值} */
+body { color: black; }
+p { font-weight: bold; }
+
+/* 错误写法（考试常见陷阱） */
+body:color=black      /* ❌ */
+{body:color=black}    /* ❌ */
+{body;color:black}    /* ❌ */</code>
+          <div class="note">⚠️ CSS全称：Cascading Style Sheets（层叠样式表），不是 Computer/Creative/Colorful</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">2</div>
+          <div class="kp-title">CSS优先级（从高到低）</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <div class="tip">✅ 正确顺序：行内样式表 &gt; 文档层（内部）样式表 &gt; 外部样式表</div>
+          <table>
+            <tr><th>优先级</th><th>类型</th><th>示例</th></tr>
+            <tr><td>最高</td><td>行内样式</td><td>&lt;p style="color:red"&gt;</td></tr>
+            <tr><td>次高</td><td>内部样式（文档层）</td><td>&lt;style&gt; p{color:red} &lt;/style&gt;</td></tr>
+            <tr><td>最低</td><td>外部样式表</td><td>&lt;link rel="stylesheet" href="..."&gt;</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">3</div>
+          <div class="kp-title">常用CSS属性</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>属性</th><th>说明</th><th>示例</th></tr>
+            <tr><td>font-family</td><td>字体名称 ✅</td><td>font-family: Arial</td></tr>
+            <tr><td>font-size</td><td>字体大小</td><td>font-size: 16px</td></tr>
+            <tr><td>font-weight</td><td>字体粗细（bold=粗体）</td><td>font-weight: bold</td></tr>
+            <tr><td>color</td><td>文字颜色</td><td>color: red</td></tr>
+            <tr><td>text-decoration</td><td>文字装饰（none=无下划线）</td><td>a{text-decoration:none} ✅</td></tr>
+            <tr><td>background-color</td><td>背景色</td><td>background-color: #fff</td></tr>
+          </table>
+          <div class="note">⚠️ 控制字体名称用 font-family，不是 font-type！去掉超链接下划线用 text-decoration:none</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">4</div>
+          <div class="kp-title">border-width 边框顺序</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <div class="tip">✅ 记忆口诀：上右下左（顺时针）</div>
+<code>border-width: 上 右 下 左;
+/* 上10px 右1px 下5px 左20px */
+border-width: 10px 1px 5px 20px;</code>
+          <div class="note">⚠️ 样题第20题：上10 下5 左20 右1 → 正确写法：10px 1px 5px 20px（上右下左）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <div class="ktab-content" id="ktab-k4">
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">1</div>
+          <div class="kp-title">数组创建</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>// 正确写法 ✅
+var aa = new Array("george", "tom", "thomas");
+var bb = ["george", "tom", "thomas"];  // 字面量
+
+// 错误写法 ❌
+var aa = new Array="george","tom","thomas"
+var aa = new Array(1:"george",2:"tom")
+var aa = new Array[3]("george","john","thomas")</code>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">2</div>
+          <div class="kp-title">常用内置对象</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>对象/方法</th><th>说明</th><th>示例</th></tr>
+            <tr><td>Math.round()</td><td>四舍五入 ✅</td><td>Math.round(6.25) → 6</td></tr>
+            <tr><td>Math.floor()</td><td>向下取整</td><td>Math.floor(3.9) → 3</td></tr>
+            <tr><td>Math.ceil()</td><td>向上取整</td><td>Math.ceil(3.1) → 4</td></tr>
+            <tr><td>Math.max/min</td><td>最大/最小值</td><td>Math.max(1,2,3) → 3</td></tr>
+            <tr><td>new Date()</td><td>获取当前时间 ✅</td><td>var d = new Date()</td></tr>
+            <tr><td>str.sub()</td><td>下标显示 ✅</td><td>"2".sub() → H₂O</td></tr>
+            <tr><td>str.sup()</td><td>上标显示</td><td>"2".sup() → H²O</td></tr>
+          </table>
+          <div class="note">⚠️ 四舍五入必须用 Math.round()，不是 round() 也不是 Math.rnd()</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">3</div>
+          <div class="kp-title">BOM常用对象</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>属性/方法</th><th>说明</th></tr>
+            <tr><td>navigator.appName</td><td>浏览器名称 ✅</td></tr>
+            <tr><td>navigator.appVersion</td><td>浏览器版本</td></tr>
+            <tr><td>window.location</td><td>当前URL</td></tr>
+            <tr><td>window.alert()</td><td>弹出对话框</td></tr>
+            <tr><td>window.history</td><td>浏览历史</td></tr>
+          </table>
+          <div class="note">⚠️ 获取浏览器名称：navigator.appName（不是 client/browser.navName）</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">4</div>
+          <div class="kp-title">常用事件</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <table>
+            <tr><th>事件</th><th>触发时机</th></tr>
+            <tr><td>onclick</td><td>鼠标点击</td></tr>
+            <tr><td>onmouseover</td><td>鼠标移入</td></tr>
+            <tr><td>onmouseout</td><td>鼠标移出</td></tr>
+            <tr><td>onfocus</td><td>获得焦点</td></tr>
+            <tr><td>onblur</td><td>失去焦点 ✅（不是 unfocus）</td></tr>
+            <tr><td>onsubmit</td><td>表单提交</td></tr>
+            <tr><td>onchange</td><td>值改变</td></tr>
+          </table>
+          <div class="note">⚠️ input控件失去焦点触发 blur 事件（不是 unfocus）</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">5</div>
+          <div class="kp-title">控制语句</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>// break 用法
+for(var i=0; i&lt;10; i++) {
+    if(i==5) break;  // 退出整个循环 ✅
+}
+
+switch(x) {
+    case 1: break;   // 退出switch ✅
+    case 2: break;
+}
+
+// break 不能用于 if 语句！❌</code>
+          <div class="note">⚠️ break 只能用于循环体和switch，不能用于if语句（样题第27题）</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">6</div>
+          <div class="kp-title">DOM操作</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+<code>// 获取元素
+var el = document.getElementById("id");
+var els = document.getElementsByClassName("cls");
+var els2 = document.getElementsByTagName("p");
+
+// 修改内容
+el.innerHTML = "&lt;b&gt;加粗文字&lt;/b&gt;";
+el.innerText = "纯文本";
+
+// 修改样式
+el.style.color = "red";
+el.style.fontWeight = "bold";
+
+// 修改属性
+el.setAttribute("href", "http://xxx.com");
+
+// 创建/插入节点
+var newEl = document.createElement("p");
+document.body.appendChild(newEl);</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- 动态网页 -->
+    <div class="ktab-content" id="ktab-k5">
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">1</div>
+          <div class="kp-title">静态与动态网页</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <ul>
+            <li>静态网页：文件扩展名为 .htm / .html</li>
+            <li>动态网页：内容由服务器动态生成，如 .php / .jsp / .aspx</li>
+            <li>页面上的滚动字幕（&lt;marquee&gt;）<strong>不属于动态网页</strong>技术</li>
+            <li><strong>AJAX是动态网页技术</strong>，不是静态网页技术（样题第29题易错！）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">2</div>
+          <div class="kp-title">JSP基本概念</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <ul>
+            <li>JSP = HTML + JSP标记 + Java脚本程序</li>
+            <li>Java脚本以 <strong>&lt;%</strong> 开始，<strong>%&gt;</strong> 结束</li>
+            <li>JSP标记分为：<strong>指令标记</strong>和<strong>动作标记</strong>，两者处理模式<strong>不同</strong></li>
+            <li>JSP注释分为：<strong>HTML注释</strong>（&lt;!-- --&gt;）和<strong>隐藏注释</strong>（&lt;%-- --%&gt;）</li>
+          </ul>
+          <div class="note">⚠️ 样题第28题：JSP指令标记和动作标记的处理模式是不同的（不是相同的）</div>
+        </div>
+      </div>
+      <div class="kp-item">
+        <div class="kp-header" onclick="toggleKp(this)">
+          <div class="kp-num">3</div>
+          <div class="kp-title">ASP.NET基本概念</div>
+          <div class="kp-arrow">▶</div>
+        </div>
+        <div class="kp-body">
+          <ul>
+            <li>ASP.NET 支持<strong>多种语言</strong>（C#、VB.NET等），不只是C#</li>
+            <li>页面文件后缀：<strong>.aspx</strong></li>
+            <li>运行在 <strong>.NET Framework</strong> 上</li>
+            <li>通常运行在 <strong>IIS</strong> 服务器上</li>
+          </ul>
+          <div class="note">⚠️ 样题第30题：ASP.NET不是只能用C#，也可用VB.NET等</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 样题练习 ===== -->
+<div class="section" id="section-quiz">
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> 样题练习（共30题）</div>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px">点击选项作答，即时反馈并附解析。完成后可查看总分。</p>
+  </div>
+
+  <div class="quiz-score-box" id="scoreBox">
+    <div class="score-num" id="scoreNum">0/30</div>
+    <div class="score-label">你的得分</div>
+    <div style="margin-top:12px;font-size:14px;opacity:0.9" id="scoreMsg"></div>
+    <button class="btn" style="margin-top:16px;background:rgba(255,255,255,0.18);color:#fff;border:2px solid rgba(255,255,255,0.7);font-weight:700;" onmouseover="this.style.background='rgba(255,255,255,0.32)'" onmouseout="this.style.background='rgba(255,255,255,0.18)'" onclick="resetQuiz()">🔄 重新练习</button>
+  </div>
+
+  <div class="quiz-controls">
+    <button class="btn btn-primary" onclick="showAllAnswers()">显示全部答案</button>
+    <button class="btn btn-outline" onclick="resetQuiz()">重置练习</button>
+    <span id="quizProgress" style="font-size:14px;color:var(--text-muted)">已完成：0 / 30</span>
+  </div>
+
+  <div id="quizContainer"></div>
+</div>
+
+<!-- ===== 代码实战 ===== -->
+<div class="section" id="section-practice">
+  <div class="card">
+    <div class="card-title"><span class="icon">💻</span> 操作题代码参考模板</div>
+    <p style="font-size:14px;color:var(--text-muted)">操作题共60分，以下是各题型的典型代码模板，考试中需补全类似代码。</p>
+  </div>
+
+  <div class="practice-case">
+    <div class="practice-header">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      &nbsp; 基本操作题 · HTML表格（仿样题31题：每日膳食建议）
+    </div>
+    <div class="practice-body">
+      <p>考点：HTML表格结构、&lt;table&gt;、&lt;tr&gt;、&lt;td&gt;、&lt;th&gt;、colspan/rowspan</p>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;
+  &lt;title&gt;</span>每日膳食建议<span class="tag">&lt;/title&gt;
+  &lt;style&gt;</span>
+    table { border-collapse: collapse; width: 60%; margin: 20px auto; }
+    th, td { border: 1px solid #999; padding: 8px 12px; text-align: center; }
+    th { background-color: #4a90d9; color: white; }
+    tr:nth-child(even) { background-color: #f0f5ff; }
+  <span class="tag">&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2</span> <span class="attr">style</span>=<span class="val">"text-align:center"</span><span class="tag">&gt;</span>每日膳食建议<span class="tag">&lt;/h2&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;th&gt;</span>食物类别<span class="tag">&lt;/th&gt;&lt;th&gt;</span>建议摄入量<span class="tag">&lt;/th&gt;&lt;th&gt;</span>备注<span class="tag">&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;</span>谷类<span class="tag">&lt;/td&gt;&lt;td&gt;</span>250-400g<span class="tag">&lt;/td&gt;&lt;td&gt;</span>每日必须<span class="tag">&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;</span>蔬菜水果<span class="tag">&lt;/td&gt;&lt;td&gt;</span>300-500g<span class="tag">&lt;/td&gt;&lt;td&gt;</span>多样选择<span class="tag">&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="practice-case">
+    <div class="practice-header">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      &nbsp; 基本操作题 · CSS鼠标悬停效果（仿样题32题：运动字体变红加粗）
+    </div>
+    <div class="practice-body">
+      <p>考点：CSS选择器、:hover伪类、鼠标事件</p>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;
+  &lt;style&gt;</span>
+    .sport-item { cursor: pointer; padding: 8px; font-size: 16px; }
+    /* 鼠标移入时字体加粗，颜色变红 */
+    .sport-item:hover { font-weight: bold; color: red; }
+  <span class="tag">&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;</span>运动选择<span class="tag">&lt;/h3&gt;
+  &lt;p</span> <span class="attr">class</span>=<span class="val">"sport-item"</span><span class="tag">&gt;</span>跑步<span class="tag">&lt;/p&gt;
+  &lt;p</span> <span class="attr">class</span>=<span class="val">"sport-item"</span><span class="tag">&gt;</span>游泳<span class="tag">&lt;/p&gt;
+  &lt;p</span> <span class="attr">class</span>=<span class="val">"sport-item"</span><span class="tag">&gt;</span>骑行<span class="tag">&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="practice-case">
+    <div class="practice-header">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      &nbsp; 简单应用题 · JavaScript 房贷计算器（仿样题34题）
+    </div>
+    <div class="practice-body">
+      <p>考点：表单取值、Math.pow()、JavaScript计算、DOM操作显示结果</p>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;&lt;title&gt;</span>房贷计算器<span class="tag">&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;</span>房贷计算器<span class="tag">&lt;/h2&gt;
+  &lt;label&gt;</span>贷款金额（元）：<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"number"</span> <span class="attr">id</span>=<span class="val">"amount"</span><span class="tag">&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;</span>年利率（%）：<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"number"</span> <span class="attr">id</span>=<span class="val">"rate"</span> <span class="attr">step</span>=<span class="val">"0.01"</span><span class="tag">&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;</span>贷款年限：<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"number"</span> <span class="attr">id</span>=<span class="val">"years"</span><span class="tag">&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;button</span> <span class="attr">onclick</span>=<span class="val">"calculate()"</span><span class="tag">&gt;</span>计算<span class="tag">&lt;/button&gt;
+  &lt;p</span> <span class="attr">id</span>=<span class="val">"result"</span><span class="tag">&gt;&lt;/p&gt;
+
+  &lt;script&gt;</span>
+    <span class="kw">function</span> <span class="fn">calculate</span>() {
+      <span class="kw">var</span> P = parseFloat(document.getElementById(<span class="str">"amount"</span>).value);
+      <span class="kw">var</span> r = parseFloat(document.getElementById(<span class="str">"rate"</span>).value) / <span class="num">100</span> / <span class="num">12</span>;
+      <span class="kw">var</span> n = parseInt(document.getElementById(<span class="str">"years"</span>).value) * <span class="num">12</span>;
+      <span class="kw">var</span> monthly = P * r * Math.pow(<span class="num">1</span>+r, n) / (Math.pow(<span class="num">1</span>+r, n) - <span class="num">1</span>);
+      document.getElementById(<span class="str">"result"</span>).innerHTML =
+        <span class="str">"每月还款金额：&lt;b&gt;"</span> + monthly.toFixed(<span class="num">2</span>) + <span class="str">" 元&lt;/b&gt;"</span>;
+    }
+  <span class="tag">&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="practice-case">
+    <div class="practice-header">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      &nbsp; 综合应用题 · 购物车（仿样题35题）
+    </div>
+    <div class="practice-body">
+      <p>考点：数组操作、DOM动态更新、alert弹窗、综合JavaScript逻辑</p>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;&lt;title&gt;</span>购物车<span class="tag">&lt;/title&gt;
+&lt;style&gt;</span>
+  .goods-list, .cart-list { width:45%; display:inline-block; vertical-align:top; }
+  table { border-collapse:collapse; width:100%; }
+  td,th { border:1px solid #ccc; padding:8px; text-align:center; }
+<span class="tag">&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;</span>商品列表<span class="tag">&lt;/h3&gt;
+  &lt;div</span> <span class="attr">class</span>=<span class="val">"goods-list"</span><span class="tag">&gt;
+    &lt;table&gt;&lt;tr&gt;&lt;th&gt;</span>商品<span class="tag">&lt;/th&gt;&lt;th&gt;</span>价格<span class="tag">&lt;/th&gt;&lt;th&gt;</span>操作<span class="tag">&lt;/th&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;</span>苹果<span class="tag">&lt;/td&gt;&lt;td&gt;</span>5<span class="tag">&lt;/td&gt;&lt;td&gt;&lt;button</span> <span class="attr">onclick</span>=<span class="val">"addToCart('苹果',5)"</span><span class="tag">&gt;</span>加入购物车<span class="tag">&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;</span>香蕉<span class="tag">&lt;/td&gt;&lt;td&gt;</span>3<span class="tag">&lt;/td&gt;&lt;td&gt;&lt;button</span> <span class="attr">onclick</span>=<span class="val">"addToCart('香蕉',3)"</span><span class="tag">&gt;</span>加入购物车<span class="tag">&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;div</span> <span class="attr">class</span>=<span class="val">"cart-list"</span><span class="tag">&gt;
+    &lt;h3&gt;</span>购物车<span class="tag">&lt;/h3&gt;
+    &lt;table&gt;&lt;tr&gt;&lt;th&gt;</span>商品<span class="tag">&lt;/th&gt;&lt;th&gt;</span>价格<span class="tag">&lt;/th&gt;&lt;th&gt;</span>数量<span class="tag">&lt;/th&gt;&lt;/tr&gt;
+      &lt;tbody</span> <span class="attr">id</span>=<span class="val">"cartBody"</span><span class="tag">&gt;&lt;/tbody&gt;
+    &lt;/table&gt;
+    &lt;p&gt;</span>总价：<span class="tag">&lt;b</span> <span class="attr">id</span>=<span class="val">"total"</span><span class="tag">&gt;</span>0<span class="tag">&lt;/b&gt;</span> 元<span class="tag">&lt;/p&gt;
+    &lt;button</span> <span class="attr">onclick</span>=<span class="val">"checkout()"</span><span class="tag">&gt;</span>结账<span class="tag">&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;script&gt;</span>
+    <span class="kw">var</span> cart = {};
+    <span class="kw">function</span> <span class="fn">addToCart</span>(name, price) {
+      <span class="kw">if</span>(cart[name]) { cart[name].qty++; }
+      <span class="kw">else</span> { cart[name] = { price: price, qty: <span class="num">1</span> }; }
+      <span class="fn">renderCart</span>();
+    }
+    <span class="kw">function</span> <span class="fn">renderCart</span>() {
+      <span class="kw">var</span> tbody = document.getElementById(<span class="str">"cartBody"</span>);
+      tbody.innerHTML = <span class="str">""</span>;
+      <span class="kw">var</span> total = <span class="num">0</span>;
+      <span class="kw">for</span>(<span class="kw">var</span> name <span class="kw">in</span> cart) {
+        <span class="kw">var</span> item = cart[name];
+        tbody.innerHTML += <span class="str">"&lt;tr&gt;&lt;td&gt;"</span>+name+<span class="str">"&lt;/td&gt;&lt;td&gt;"</span>+item.price+<span class="str">"&lt;/td&gt;&lt;td&gt;"</span>+item.qty+<span class="str">"&lt;/td&gt;&lt;/tr&gt;"</span>;
+        total += item.price * item.qty;
+      }
+      document.getElementById(<span class="str">"total"</span>).innerText = total;
+    }
+    <span class="kw">function</span> <span class="fn">checkout</span>() { alert(<span class="str">"结账成功"</span>); }
+  <span class="tag">&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 备考清单 ===== -->
+<div class="section" id="section-checklist">
+  <div class="card">
+    <div class="card-title"><span class="icon">✅</span> 备考知识点清单</div>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px">逐项打勾，追踪复习进度。进度自动保存至本地。</p>
+    <div class="check-progress">
+      <div class="check-progress-label" id="checkLabel">复习进度：0 / 30</div>
+      <div class="progress-bar"><div class="progress-fill" id="checkFill" style="width:0%"></div></div>
+    </div>
+    <div id="checklistContainer"></div>
+    <button class="btn btn-outline" style="margin-top:12px" onclick="resetChecklist()">重置进度</button>
+  </div>
+</div>
+
+<!-- ===== 考试技巧 ===== -->
+<div class="section" id="section-tips">
+  <div class="card">
+    <div class="card-title"><span class="icon">💡</span> 考试技巧与策略</div>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card" style="background:#e3f2fd;border-left:4px solid #1565c0">
+      <h4>📝 选择题策略（40分）</h4>
+      <ul>
+        <li>先做有把握的，圈出不确定的</li>
+        <li>排除法：4选项找最明显的错误先排除</li>
+        <li>HTML/CSS/JS语法题靠记忆，不要乱猜</li>
+        <li>动态网页题（JSP/ASP.NET）靠理解概念</li>
+        <li>全部做完，不留空白（选C成功率较高）</li>
+      </ul>
+    </div>
+    <div class="tip-card" style="background:#e8f5e9;border-left:4px solid #2e7d32">
+      <h4>💻 操作题策略（60分）</h4>
+      <ul>
+        <li>先读题目，看清楚页面效果图</li>
+        <li>基本操作题优先完成（最容易拿分）</li>
+        <li>补全代码时注意大小写，属性值要加引号</li>
+        <li>完成后在浏览器预览，对照效果图检查</li>
+        <li>JS函数名、变量名要与题目给出的一致</li>
+      </ul>
+    </div>
+    <div class="tip-card" style="background:#fff3e0;border-left:4px solid #f57c00">
+      <h4>⚠️ 高频易错点</h4>
+      <ul>
+        <li>DNS → 域名与IP地址的映射（不是主机名）</li>
+        <li>HTTP监听 TCP/80 端口</li>
+        <li>CSS全称：Cascading Style Sheets</li>
+        <li>CSS优先级：行内 > 内部 > 外部</li>
+        <li>有序列表用 &lt;ol&gt;，无序用 &lt;ul&gt;</li>
+        <li>&lt;a&gt; 是行内元素，不是块元素</li>
+        <li>Math.round() 四舍五入</li>
+        <li>失去焦点事件：blur（不是unfocus）</li>
+        <li>AJAX是动态网页技术，不是静态</li>
+        <li>ASP.NET支持多种语言，不只C#</li>
+      </ul>
+    </div>
+    <div class="tip-card" style="background:#fce4ec;border-left:4px solid #c62828">
+      <h4>⏱️ 时间分配建议</h4>
+      <ul>
+        <li>选择题（40题）：约30分钟</li>
+        <li>基本操作题：约15分钟</li>
+        <li>简单应用题：约20分钟</li>
+        <li>综合应用题：约40分钟</li>
+        <li>检查&修改：约15分钟</li>
+        <li>合计：约120分钟</li>
+      </ul>
+    </div>
+    <div class="tip-card" style="background:#f3e5f5;border-left:4px solid #7b1fa2">
+      <h4>🔑 操作题必背代码结构</h4>
+      <ul>
+        <li>HTML5文档声明：&lt;!DOCTYPE html&gt;</li>
+        <li>引入外部CSS：&lt;link rel="stylesheet" href="x.css"&gt;</li>
+        <li>表单提交：&lt;form action="" method="POST"&gt;</li>
+        <li>获取元素：document.getElementById("id")</li>
+        <li>修改样式：el.style.color = "red"</li>
+        <li>弹出对话框：alert("消息")</li>
+      </ul>
+    </div>
+    <div class="tip-card" style="background:#e0f7fa;border-left:4px solid #00838f">
+      <h4>📅 备考计划建议</h4>
+      <ul>
+        <li>第1-2天：Web基础 + HTTP协议</li>
+        <li>第3-4天：HTML结构与表单</li>
+        <li>第5-6天：CSS样式与布局</li>
+        <li>第7-9天：JavaScript语法与DOM/BOM</li>
+        <li>第10天：动态网页概念 + 刷题</li>
+        <li>考前1天：做样题，查漏补缺</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ===== QUIZ DATA =====
+// ans字段为0-based索引（A=0,B=1,C=2,D=3），与官方参考答案完全对应
+const quizData = [
+  {
+    q: "1. 下列关于域名系统DNS的描述中，正确的是",
+    opts: ["A) DNS是完成主机名和域名之间的映射","B) DNS是完成主机名和IP地址之间的映射","C) DNS是完成域名和IP地址之间的映射","D) DNS是完成域名和HTTP之间的映射"],
+    ans: 2,
+    exp: "【官方C】DNS（域名系统）负责将域名转换为IP地址，即域名与IP地址之间的映射。"
+  },
+  {
+    q: "2. 在字符串 http://www.sample.com:8080/login.htm 中，所用的访问协议是",
+    opts: ["A) WWW","B) http","C) 8080","D) login.htm"],
+    ans: 1,
+    exp: "【官方B】URL格式为：协议://主机名:端口/路径，因此访问协议是 http。"
+  },
+  {
+    q: "3. 下列关于超级链接的描述中，正确的是",
+    opts: ["A) 只有文本可以设为超级链接","B) 只有音频可以设为超级链接","C) 只有视频可以设为超级链接","D) 以上都不对"],
+    ans: 3,
+    exp: "【官方D】文本、图片、音频、视频等内容都可以设为超级链接，选项A、B、C均不正确。"
+  },
+  {
+    q: "4. 下列关于Web的工作原理描述中，错误的是",
+    opts: ["A) HTTP协议用于在服务器和浏览器之间传送网页数据","B) 浏览器负责网页数据的请求和显示","C) 服务器负责响应浏览器的请求","D) HTTP负责响应浏览器的请求"],
+    ans: 3,
+    exp: "【官方D】响应浏览器请求的是服务器，HTTP只是通信协议，本身不响应请求。"
+  },
+  {
+    q: "5. 根据HTTP标准定义，HTTP协议通常监听的协议和端口号是",
+    opts: ["A) TCP/80端口","B) UDP/80端口","C) ICMP/443端口","D) TELNET/443端口"],
+    ans: 0,
+    exp: "【官方A】HTTP基于TCP协议，默认监听80端口；HTTPS使用TCP/443端口。"
+  },
+  {
+    q: "6. 下列关于HTTP消息格式的描述中，正确的是",
+    opts: ["A) 请求消息由状态行、消息头、消息体构成","B) 响应消息由开始行、状态行、消息头、消息体构成","C) 请求消息由开始行、消息头、消息体构成","D) 响应消息由开始行、消息头、消息体构成"],
+    ans: 2,
+    exp: "【官方C】请求消息 = 开始行(请求行)+ 消息头 + 消息体。A错：请求消息的开始行叫请求行不叫状态行。B错：响应消息没有单独的状态行与开始行并列。"
+  },
+  {
+    q: "7. 下列HTML文档标记中，表示页面标题的标记是",
+    opts: ["A) &lt;head&gt;&lt;/head&gt;","B) &lt;header&gt;&lt;/header&gt;","C) &lt;title&gt;&lt;/title&gt;","D) &lt;caption&gt;&lt;/caption&gt;"],
+    ans: 2,
+    exp: "【官方C】&lt;title&gt;标签定义显示在浏览器标签栏的页面标题。&lt;caption&gt;是表格标题，&lt;header&gt;是页眉语义标签。"
+  },
+  {
+    q: "8. 在HTML文档中，引用外部样式表的语句应放置在",
+    opts: ["A) &lt;script&gt;&lt;/script&gt;标签内","B) &lt;title&gt;&lt;/title&gt;标签内","C) &lt;head&gt;&lt;/head&gt;标签内","D) &lt;body&gt;&lt;/body&gt;标签内"],
+    ans: 2,
+    exp: "【官方C】外部CSS使用&lt;link rel=stylesheet&gt;引入，应放在&lt;head&gt;标签内，不能放在&lt;body&gt;内。"
+  },
+  {
+    q: "9. 下列HTML标签中，能正确制作电子邮件链接的是",
+    opts: ["A) &lt;a href=xxx@yy&gt;","B) &lt;mailto href=xxx@yyy&gt;","C) &lt;a href=mailto:xxx@yyy&gt;","D) &lt;mail&gt;xxx@yyy&lt;/mail&gt;"],
+    ans: 2,
+    exp: "【官方C】电子邮件链接格式：&lt;a href=mailto:邮件地址&gt;，href属性值必须加 mailto: 前缀。"
+  },
+  {
+    q: "10. 下列HTML标签中，能正确产生复选框的是",
+    opts: ["A) &lt;input type=radio&gt;","B) &lt;input type=check&gt;","C) &lt;input type=checkbox&gt;","D) &lt;input type=select&gt;"],
+    ans: 2,
+    exp: "【官方C】复选框使用 type=checkbox。radio是单选框，check和select均不是合法的input类型值。"
+  },
+  {
+    q: "11. 下列HTML标签中，能在新窗口中打开超链接的是",
+    opts: ["A) &lt;a href=url target=_self&gt;","B) &lt;a href=url target=_blank&gt;","C) &lt;a href=url target=_top&gt;","D) &lt;a href=url target=default&gt;"],
+    ans: 1,
+    exp: "【官方B】target=_blank 表示在新窗口中打开；_self是当前窗口（默认值）；_top是顶层框架；default不是合法值。"
+  },
+  {
+    q: "12. 下列HTML元素标签中，能建立有序列表的是",
+    opts: ["A) &lt;ul&gt;","B) &lt;li&gt;","C) &lt;ol&gt;","D) &lt;dl&gt;"],
+    ans: 2,
+    exp: "【官方C】&lt;ol&gt;是有序列表（Ordered List），&lt;ul&gt;是无序列表，&lt;li&gt;是列表项，&lt;dl&gt;是定义列表。"
+  },
+  {
+    q: "13. 层叠样式表CSS的英文单词全称是",
+    opts: ["A) Computer Style Sheet","B) Cascade Style Sheet","C) Creative Style Sheet","D) Colorful Style Sheet"],
+    ans: 1,
+    exp: "【官方B】CSS全称是 Cascading Style Sheets（层叠样式表），选项B最接近（Cascade），其他选项均不正确。"
+  },
+  {
+    q: "14. 下列选项中，CSS语法正确的是",
+    opts: ["A) body:color=black","B) {body:color=black}","C) body{color:black}","D) {body;color:black}"],
+    ans: 2,
+    exp: "【官方C】CSS正确语法：选择器{属性:值;} 即 body{color:black}。A用了冒号和等号，B和D大括号位置错误。"
+  },
+  {
+    q: "15. 在以下的CSS语句中，可使所有&lt;p&gt;元素变为粗体的是",
+    opts: ["A) &lt;p style=font-size:bold&gt;","B) &lt;p style=font-weight:bold&gt;","C) p{font-weight:bold}","D) p(font-size:bold}"],
+    ans: 2,
+    exp: "【官方C】题目要求使所有p元素变粗体，应用CSS规则 p{font-weight:bold}。A错（font-size不控制粗细），B是行内样式只影响单个元素，D括号写法错误。"
+  },
+  {
+    q: "16. 下列样式中，能使显示的超链接没有下划线的是",
+    opts: ["A) a{text-decoration:none}","B) a{text-decoration:no underline}","C) a{underline:none}","D) a{decoration::none}"],
+    ans: 0,
+    exp: "【官方A】去除超链接下划线用 text-decoration:none。属性名是 text-decoration，值是 none。"
+  },
+  {
+    q: "17. 下列属性中，能够控制元素字体名称的属性是",
+    opts: ["A) font-weight","B) font-family","C) font-size","D) font-type"],
+    ans: 1,
+    exp: "【官方B】font-family 控制字体名称（如Arial、宋体）。font-weight控制粗细，font-size控制字号，font-type不是CSS属性。"
+  },
+  {
+    q: "18. 下列标签中，不属于块元素的标签是",
+    opts: ["A) &lt;div&gt;","B) &lt;a&gt;","C) &lt;p&gt;","D) &lt;table&gt;"],
+    ans: 1,
+    exp: "【官方B】&lt;a&gt;是行内元素（inline element），不是块级元素。&lt;div&gt;、&lt;p&gt;、&lt;table&gt;都是块级元素，默认独占一行。"
+  },
+  {
+    q: "19. 将CSS样式表的作用优先级从高到低排列，正确的顺序是",
+    opts: ["A) 文档层样式表、外部样式表、行内样式表","B) 行内样式表、文档层样式表、外部样式表","C) 文档层样式表、行内样式表、外部样式表","D) 行内样式表、外部样式表、文档层样式表"],
+    ans: 1,
+    exp: "【官方B】CSS优先级从高到低：行内样式 &gt; 内部（文档层）样式表 &gt; 外部样式表。"
+  },
+  {
+    q: "20. 在设置边框时，能够设置上边框10px、下边框5px、左边框20px、右边框1px的语句是",
+    opts: ["A) border-width:10px 5px 20px 1px","B) border-width:10px 1px 20px 5px","C) border-width:10px 1px 5px 20px","D) border-width:10px 20px 5px 1px"],
+    ans: 2,
+    exp: "【官方C】CSS边框顺序（顺时针）：上 右 下 左。题目要求：上10px、右1px、下5px、左20px → 10px 1px 5px 20px。"
+  },
+  {
+    q: "21. 下列定义数组的语句中，正确的JavaScript语句是",
+    opts: ["A) var aa=new Array=george,tom,thomas","B) var aa=new Array(1:george,2:tom,3:thomas)","C) var aa=new Array(george,tom,thomas)","D) var aa=new Array[3](george,john,thomas)"],
+    ans: 2,
+    exp: "【官方C】JavaScript数组正确写法：new Array(元素1, 元素2, ...) 或字面量 [元素1, 元素2]。A用了=赋值，B用了键值对写法，D用了方括号，均错误。"
+  },
+  {
+    q: "22. 以下获得客户浏览器名称的语句中，正确的是",
+    opts: ["A) client.navName","B) navigator.appName","C) browser.navName","D) browser.appName"],
+    ans: 1,
+    exp: "【官方B】BOM对象 navigator 包含浏览器信息，navigator.appName 获取浏览器名称。不存在 client 或 browser 对象。"
+  },
+  {
+    q: "23. 能够在HTML页面中输出H₂O的语句是",
+    opts: ["A) str=2; document.write(H+str.sub()+O);（字符串写法）","B) str=2; document.write(H+str.sup()+O);（字符串写法）","C) str=2; document.write(H+str.sub()+O);（无引号写法）","D) str=2; documentwrite(H+str.sup()+O);（无引号写法）"],
+    ans: 0,
+    exp: "【官方A】str.sub() 使字符串显示为下标，str.sup() 显示为上标。H₂O的2是下标，用 sub()。选项A完整写法为：str=&quot;2&quot;;document.write(&quot;H&quot;+str.sub()+&quot;O&quot;);"
+  },
+  {
+    q: "24. 当input控件失去焦点时触发的事件是",
+    opts: ["A) unfocus","B) focus","C) blur","D) submit"],
+    ans: 2,
+    exp: "【官方C】失去焦点触发 blur 事件；获得焦点触发 focus 事件；unfocus 不是合法事件名；submit 是表单提交事件。"
+  },
+  {
+    q: "25. 把6.25四舍五入为6的语句是",
+    opts: ["A) round(6.25)","B) rnd(6.25)","C) Math.rnd(6.25)","D) Math.round(6.25)"],
+    ans: 3,
+    exp: "【官方D】JavaScript四舍五入用 Math.round()，必须加 Math. 前缀，函数名是 round 不是 rnd。A缺少Math.前缀，B和C函数名错误。"
+  },
+  {
+    q: "26. 获取当前时间的JavaScript语句是",
+    opts: ["A) new Date()","B) new Date(milliseconds)","C) new Date(dateString)","D) new Date(year, month[, day[, ...]])"],
+    ans: 0,
+    exp: "【官方A】new Date() 不带参数时返回当前日期和时间。带参数时则返回指定的时间点，不代表当前时间。"
+  },
+  {
+    q: "27. 下列关于break语句的描述，错误的是",
+    opts: ["A) break语句用于循环体内，它将退出该循环","B) break语句用于switch语句，表示退出该switch语句","C) break语句用于if语句，表示退出该if语句","D) break语句在一个循环体内可以使用多次"],
+    ans: 2,
+    exp: "【官方C】break只能用于循环语句和switch语句，不能用于if语句（if语句没有break退出的概念）。"
+  },
+  {
+    q: "28. 下列关于JSP基本组成的说法，错误的是",
+    opts: ["A) 完整的JSP网页构成元素有：HTML标记、JSP标记、Java脚本程序","B) JSP以HTML为基础，嵌入代码以 &lt;% 开始，以 %&gt; 结束","C) JSP标记包括指令标记和动作标记，JSP引擎对它们的处理模式是相同的","D) JSP中的注释有HTML注释和隐藏注释两种类型"],
+    ans: 2,
+    exp: "【官方C】JSP指令标记和动作标记的处理模式不同（不是相同的）。指令标记在页面转换时处理，动作标记在请求处理（运行时）处理。"
+  },
+  {
+    q: "29. 下列有关静态网页和动态网页的描述，错误的是",
+    opts: ["A) 网页上的滚动字幕一般不属于动态网页","B) 网页可以是静态网页和动态网页的混合","C) 静态网页文件往往以htm和html结尾","D) AJAX是一种最新发展的静态网页技术"],
+    ans: 3,
+    exp: "【官方D】AJAX是动态网页技术，不是静态网页技术。AJAX可以在不刷新页面的情况下与服务器进行数据交互，属于动态技术。"
+  },
+  {
+    q: "30. 下列关于ASP.NET的描述中，错误的是",
+    opts: ["A) ASP.NET只能采用C#语言进行开发","B) ASP.NET的页面文件后缀为aspx","C) ASP.NET主要运行在.NET Framework上","D) ASP.NET通常运行在IIS上"],
+    ans: 0,
+    exp: "【官方A】ASP.NET支持多种编程语言（C#、VB.NET等），而不是只能用C#。"
+  }
+];
+
+// ===== CHECKLIST DATA =====
+const checklistItems = [
+  "理解DNS的作用：完成域名与IP地址的映射",
+  "掌握URL的格式：协议://主机名[:端口]/路径",
+  "记住HTTP默认端口：TCP/80",
+  "理解HTTP请求消息结构：开始行+消息头+消息体",
+  "理解HTTP响应消息结构：开始行+消息头+消息体",
+  "掌握常用HTTP状态码：200/301/404/500",
+  "掌握HTML5文档基本结构：DOCTYPE/html/head/body",
+  "记住<title>是页面标题，<header>是页眉语义标签",
+  "掌握外部CSS引入方式：<link>放在<head>内",
+  "掌握超链接写法：<a href=\"mailto:xxx\">邮件链接",
+  "记住target=\"_blank\"是新窗口打开",
+  "区分表单控件：checkbox/radio/text/password/file",
+  "区分列表标签：<ol>有序 / <ul>无序 / <li>列表项",
+  "区分块元素和行内元素：<a>是行内元素",
+  "CSS全称：Cascading Style Sheets",
+  "记住CSS正确语法：选择器{属性:值}",
+  "掌握CSS优先级：行内 > 内部 > 外部",
+  "记住border-width顺序：上右下左（顺时针）",
+  "掌握常用CSS属性：font-family/font-weight/text-decoration",
+  "去除链接下划线：a{text-decoration:none}",
+  "JavaScript数组：new Array(元素1,元素2,...)",
+  "BOM获取浏览器名称：navigator.appName",
+  "字符串下标/上标：str.sub() / str.sup()",
+  "失去焦点事件：blur（不是unfocus）",
+  "四舍五入：Math.round()（不是round或Math.rnd）",
+  "获取当前时间：new Date()",
+  "break语句不能用于if语句",
+  "JSP指令标记和动作标记处理模式不同",
+  "AJAX是动态网页技术，不是静态",
+  "ASP.NET支持多种语言，不只是C#"
+];
+
+// ===== STATE =====
+let answered = new Array(quizData.length).fill(null);
+let checkState = JSON.parse(localStorage.getItem('ncre_check') || 'null') || new Array(checklistItems.length).fill(false);
+
+// ===== NAV =====
+function switchSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelectorAll('#mainNav button').forEach((b, i) => {
+    b.classList.remove('active');
+    if(b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+  });
+}
+
+// ===== KNOWLEDGE TABS =====
+function switchKtab(id) {
+  document.querySelectorAll('.ktab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.ktab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('ktab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== ACCORDION =====
+function toggleKp(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// ===== QUIZ =====
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.id = 'qq-' + qi;
+    let optsHtml = q.opts.map((opt, oi) => {
+      let cls = '';
+      let icon = '';
+      if(answered[qi] !== null) {
+        if(oi === q.ans) { cls = ' correct'; icon = ' ✔'; }
+        else if(oi === answered[qi] && oi !== q.ans) { cls = ' wrong'; icon = ' ✘'; }
+      }
+      // 选项已包含"A）"等前缀，直接使用，用innerHTML渲染以支持&lt;&gt;实体
+      return `<li class="${cls}" onclick="answerQ(${qi},${oi})">${opt}${icon}</li>`;
+    }).join('');
+    div.innerHTML = `
+      <div class="quiz-q-text">${q.q}</div>
+      <ul class="quiz-options">${optsHtml}</ul>
+      <div class="quiz-explain ${answered[qi]!==null?'show':''}" id="exp-${qi}">
+        💡 <strong>解析：</strong>${q.exp}
+      </div>`;
+    container.appendChild(div);
+  });
+  updateQuizProgress();
+}
+
+function answerQ(qi, oi) {
+  if(answered[qi] !== null) return;
+  answered[qi] = oi;
+  buildQuiz();
+  if(answered.every(a => a !== null)) showScore();
+}
+
+function updateQuizProgress() {
+  const done = answered.filter(a => a !== null).length;
+  document.getElementById('quizProgress').textContent = `已完成：${done} / ${quizData.length}`;
+}
+
+function showScore() {
+  const correct = answered.filter((a, i) => a === quizData[i].ans).length;
+  const box = document.getElementById('scoreBox');
+  document.getElementById('scoreNum').textContent = `${correct} / ${quizData.length}`;
+  const pct = Math.round(correct / quizData.length * 100);
+  let msg = pct >= 90 ? '🎉 优秀！基础非常扎实！' : pct >= 70 ? '👍 良好！继续复习薄弱点' : '💪 加油！多刷几遍知识点';
+  document.getElementById('scoreMsg').textContent = msg + `（正确率 ${pct}%）`;
+  box.classList.add('show');
+}
+
+function showAllAnswers() {
+  quizData.forEach((q, i) => { if(answered[i] === null) answered[i] = q.ans; });
+  buildQuiz();
+  showScore();
+}
+
+function resetQuiz() {
+  answered = new Array(quizData.length).fill(null);
+  document.getElementById('scoreBox').classList.remove('show');
+  buildQuiz();
+}
+
+// ===== CHECKLIST =====
+function buildChecklist() {
+  const container = document.getElementById('checklistContainer');
+  container.innerHTML = '';
+  checklistItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'check-item' + (checkState[i] ? ' checked' : '');
+    div.onclick = () => toggleCheck(i);
+    div.innerHTML = `<input type="checkbox" ${checkState[i]?'checked':''} onchange="toggleCheck(${i})">
+      <span class="check-text">${item}</span>`;
+    container.appendChild(div);
+  });
+  updateCheckProgress();
+}
+
+function toggleCheck(i) {
+  checkState[i] = !checkState[i];
+  localStorage.setItem('ncre_check', JSON.stringify(checkState));
+  buildChecklist();
+}
+
+function updateCheckProgress() {
+  const done = checkState.filter(Boolean).length;
+  const total = checklistItems.length;
+  document.getElementById('checkLabel').textContent = `复习进度：${done} / ${total}`;
+  document.getElementById('checkFill').style.width = (done/total*100) + '%';
+}
+
+function resetChecklist() {
+  checkState = new Array(checklistItems.length).fill(false);
+  localStorage.removeItem('ncre_check');
+  buildChecklist();
+}
+
+// ===== INIT =====
+buildQuiz();
+buildChecklist();
+</script>
+</body>
+</html>
